@@ -1,6 +1,6 @@
 from tkinter import *
 from PIL import ImageTk, Image
-from test import printCommand
+from connection import printCommand
 
 # Create a window
 window = Tk()
