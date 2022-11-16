@@ -57,8 +57,12 @@ class NavFrame(ttk.Frame):
     def index_handler(self, event, button, parent):
         self.clear_top_middle(parent)
         main = parent.get_frame("main")
-
         main.top_frame.create_title_label(button, ("Arial", 20))
+
+        for b in self.buttons:
+            b.configure(background="#E5E8E8")
+            if button == b.cget("text"):
+                b.configure(background="#F1948A")
 
         if button == "Map":
             Map(parent).place(relwidth=1)
