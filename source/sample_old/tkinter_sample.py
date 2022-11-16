@@ -2,8 +2,8 @@ from tkinter import *
 from PIL import ImageTk, Image
 from connection import printCommand
 
-class OptionMenuSet(Frame):
 
+class OptionMenuSet(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.gu_dong_dict = dict()
@@ -20,28 +20,29 @@ class OptionMenuSet(Frame):
 
         self.variable_a = StringVar(self)
         self.variable_b = StringVar(self)
-
-        self.variable_a.trace('w', self.update_options)
+        self.variable_a.trace("w", self.update_options)
 
         self.optionmenu_a = OptionMenu(self, self.variable_a, *self.gu_dong_dict.keys())
-        self.optionmenu_b = OptionMenu(self, self.variable_b, '')
+        self.optionmenu_b = OptionMenu(self, self.variable_b, "")
 
-        self.variable_a.set('강남구')
+        self.variable_a.set("강남구")
 
-        self.optionmenu_a.pack()
-        self.optionmenu_b.pack()
+        self.optionmenu_a.grid(row=0, column=0)
+        self.optionmenu_b.grid(row=0, column=1)
         self.pack()
-
 
     def update_options(self, *args):
         countries = self.gu_dong_dict[self.variable_a.get()]
         self.variable_b.set(countries[0])
 
-        menu = self.optionmenu_b['menu']
-        menu.delete(0, 'end')
+        menu = self.optionmenu_b["menu"]
+        menu.delete(0, "end")
 
         for country in countries:
-            menu.add_command(label=country, command=lambda nation=country[0]: self.variable_b.set(nation))
+            menu.add_command(
+                label=country, command=lambda nation=country[0]: self.variable_b.set(nation)
+            )
+
 
 # Create a window
 window = Tk()
