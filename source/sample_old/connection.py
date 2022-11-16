@@ -1,46 +1,52 @@
 import mysql.connector
 
+
 def connectDB(db_use):
-    mydb = mysql.connector.connect(
-        host="localhost",
-        user = "root",
-        passwd = "skku",
-        database = db_use
-        )
-    mycursor = mydb.cursor(buffered = True)
+    mydb = mysql.connector.connect(host="localhost", user="root", passwd="skku", database=db_use)
+    mycursor = mydb.cursor(buffered=True)
 
     return mydb, mycursor
     # Connected to the database
     # Now we can create instances of DB connection and cursor, ex) mydb, mycursor = connectDB("test")
 
+
 def printAll(tbl, db_use):
-    mycursor.execute("SELECT * from "+tbl)
+    mycursor.execute("SELECT * from " + tbl)
     myResult = mycursor.fetchall()
     for row in myResult:
         print(row)
     # printAll("original_shop_seoul", "project") prints all the rows in 'original_shop_seoul.csv'
 
+
 def printHead(tbl):
-    mycursor.execute("SELECT * from "+tbl+" limit 10")
+    mycursor.execute("SELECT * from " + tbl + " limit 10")
     myResult = mycursor.fetchall()
     for row in myResult:
         print(row)
     # printHead("original_shop_seoul", "project") prints only first 10 rows in 'original_shop_seoul.csv'
 
-def printCommand(command):
-    try: 
+
+def executeCommand(command):
+    try:
         mycursor.execute(command)
         mydb.commit()
     except:
         # Rollback in case there is any error
         mydb.rollback()
     myResult = mycursor.fetchall()
-    print("\nRESULT of", command)
-    for row in myResult:
-        print(row)
-    return myResult
-    # prints the result of the command
 
+    return myResult
+
+def printCommand(command):
+    try:
+        mycursor.execute(command)
+        mydb.commit()
+    except:
+        # Rollback in case there is any error
+        mydb.rollback()
+    myResult = mycursor.fetchall()
+
+    return myResult
 mydb, mycursor = connectDB("project")
 mycursor.execute("use project")
 # printHead("original_shop_seoul")
