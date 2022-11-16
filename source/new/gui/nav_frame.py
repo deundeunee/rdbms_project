@@ -31,12 +31,7 @@ class NavFrame(ttk.Frame):
         self.buttons = []
         idx = 1
         for button_text in button_texts:
-            self.buttons.append(
-                tk.Button(
-                    self,
-                    text=button_text,
-                )
-            )
+            self.buttons.append(tk.Button(self, text=button_text, background="MistyRose"))
             self.buttons[idx - 1].grid(row=idx + 1, column=0, pady=10, sticky="nswe")
             idx += 1
 
@@ -60,7 +55,7 @@ class NavFrame(ttk.Frame):
         main.top_frame.create_title_label(button, ("Arial", 20))
 
         for b in self.buttons:
-            b.configure(background="#E5E8E8")
+            b.configure(background="MistyRose")
             if button == b.cget("text"):
                 b.configure(background="#F1948A")
 
