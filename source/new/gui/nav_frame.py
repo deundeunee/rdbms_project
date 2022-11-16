@@ -47,6 +47,7 @@ class NavFrame(ttk.Frame):
 
         self.clear_top_middle(parent)
         About(parent).place(relwidth=1)
+        self.buttons[0].configure(background="#F1948A")
         parent.get_frame("main").top_frame.create_title_label("About", ("Arial", 20))
 
     def index_handler(self, event, button, parent):
