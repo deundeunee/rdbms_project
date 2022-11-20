@@ -39,12 +39,12 @@ class Map(ttk.Frame):
 
     def search_widget(self, frame):
         addr_label_frame = tk.Frame(frame)
-        addr_label_frame.place(relwidth=0.2, relheight=1)
+        addr_label_frame.place(relwidth=0.15, relheight=1)
 
         option = OptionMenuSet(addr_label_frame)
 
         text_entry = tk.Entry(frame)
-        text_entry.place(relwidth=0.69, relheight=1, relx=0.21)
+        text_entry.place(relwidth=0.74, relheight=1, relx=0.16)
         button = tk.Button(
             frame,
             text="Search",
