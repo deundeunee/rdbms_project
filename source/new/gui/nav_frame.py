@@ -2,6 +2,7 @@ from tkinter import ttk
 import tkinter as tk
 from about import About
 from map import Map
+from news import News
 
 
 class NavFrame(ttk.Frame):
@@ -60,11 +61,16 @@ class NavFrame(ttk.Frame):
             if button == b.cget("text"):
                 b.configure(background="#F1948A")
 
-        if button == "Map":
-            Map(parent).place(relwidth=1)
-        elif button == "About":
+        if button == "About":
             About(parent).place(relwidth=1)
-
+        elif button == "Map":
+            Map(parent).place(relwidth=1)
+        elif button == "News":
+            News(parent).place(relwidth=1)
+        # elif button == "Suggest":
+        #     Suggest(parent).place(relwidth=1)
+        # elif button == "My page":
+        #     My_page(parent).place(relwidth=1)
     def clear_top_middle(self, parent):
         main = parent.get_frame("main")
 
