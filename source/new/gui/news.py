@@ -1,8 +1,8 @@
 from tkinter import messagebox, ttk
 import tkinter as tk
-
 import requests
 from bs4 import BeautifulSoup
+from connection import *
 
 
 response = requests.get(
@@ -31,26 +31,15 @@ for news in news_title:
     # print(url,'\n')
 
 # 데이터 프레임으로 만들어서 SQL로 넣기
-import mysql.connector
-
-
-def connectDB(db_use):
-    mydb = mysql.connector.connect(
-        host="localhost", user="root", passwd="ruddnjs12!", database=db_use
-    )
-    mycursor = mydb.cursor(buffered=True)
-    mycursor.execute("use " + db_use)
-
-    return mydb, mycursor
-
-
-db, c = connectDB("project")
+db, cursor = connectDB("project")
 
 
 def add_click(k):
-    a, b = news_title[k].get_text(), news_title[k]["href"]
+    cursor.execute(
+        "CREATE TABLE if not exists my_news(id INT AUTO_INCREMENT PRIMARY KEY, news_title VARCHAR(255), url VARCHAR(255))"
+    )
     query = "insert into my_news (news_title, url) values (%s,%s)"
-    c.execute(query, (a, b))
+    cursor.execute(query, (news_title[k].get_text(), news_title[k]["href"]))
     db.commit()
     messagebox.showinfo("Success", "This news is added in your page")
 
