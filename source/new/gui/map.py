@@ -74,15 +74,17 @@ def active(event, widget, addr_frame, addr, map_widget):
 
 
 def add_button_handler(event, data):
-    mydb, mycursor = connectDB("project")
+    db, cursor = connectDB("project")
     print(data)
     tk.messagebox.showinfo("Confirm", "Added to your mark list!")
-    executeCommand(
-        mydb,
-        mycursor,
-        "CREATE TABLE if not exists user_shop(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), age INT)",
+
+    cursor.execute(
+        "CREATE TABLE if not exists my_place(id INT AUTO_INCREMENT PRIMARY KEY, shop_id INT)"
     )
-    executeCommand(mydb, mycursor, "INSERT INTO drivers (name, age) VALUES ('Mika', 54)")
+    query = "insert into my_place (shop_id) values (%s)"
+    print(data[0])
+    cursor.execute(query, (data[0],))
+    db.commit()
 
 
 class Map(ttk.Frame):
