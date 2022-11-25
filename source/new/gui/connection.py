@@ -21,10 +21,13 @@ def executeCommand(mydb, mycursor, command):
     except:
         # Rollback in case there is any error
         mydb.rollback()
-    myResult = mycursor.fetchall()
-    if myResult:
-        return myResult
 
+
+    try:
+        myResult = mycursor.fetchall()
+        return myResult
+    except:
+        print("result fetch error")
 
 # Build an sql query
 def build_sql_query(fields, table, conditions=None):

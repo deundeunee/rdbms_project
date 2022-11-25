@@ -11,7 +11,7 @@ def button_click(store, gu, dong, addr_frame, map_widget):
     result = executeCommand(
         mydb,
         mycursor,
-        "SELECT 상호명,도로명주소 FROM original_shop_seoul WHERE ((상호명 like '%"
+        "SELECT 상가업소번호, 상호명,도로명주소 FROM original_shop_seoul WHERE ((상호명 like '%"
         + store
         + "%') and (시군구명 = '"
         + gu
@@ -28,8 +28,7 @@ def button_click(store, gu, dong, addr_frame, map_widget):
 
 def display(addr_frame, map_widget, result, font):
     idx = 0
-    addr_frame.grid_columnconfigure(0, weight=2)  # reset grid
-    addr_frame.grid_columnconfigure(1, weight=1)  # reset grid
+    addr_frame.grid_columnconfigure(0, weight=1)  # reset grid
 
     for res in result:
         style = ttk.Style()
@@ -37,7 +36,8 @@ def display(addr_frame, map_widget, result, font):
 
         res_card = ttk.LabelFrame(addr_frame, style="res_card.TLabelframe")
         res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
-        for i in range(len(res)):
+
+        for i in range(1, len(res)):
             res_label = tk.Label(
                 res_card,
                 text=res[i],
@@ -51,8 +51,10 @@ def display(addr_frame, map_widget, result, font):
                     event, widget, addr_frame, addr, map_widget
                 ),
             )
+
         add_button = tk.Button(addr_frame, text="add")
-        add_button.grid(row=idx, column=1)
+        add_button.grid(row=idx, column=1, padx=(0, 10))
+        add_button.bind("<Button-1>", lambda event, data=res: add_button_handler(event, data))
 
         idx += 1
 
@@ -60,12 +62,27 @@ def display(addr_frame, map_widget, result, font):
 def active(event, widget, addr_frame, addr, map_widget):
     style = ttk.Style()
     style.configure("on_res_card.TLabelframe", background="lightgrey", padding=5)
+    style.configure("res_card.TLabelframe", background="white", padding=5)
 
-    for labelframe in addr_frame.winfo_children():
-        labelframe.configure(style="res_card.TLabelframe")
+    for frame in addr_frame.winfo_children():
+        if frame.winfo_class() == "TLabelframe":
+            frame.configure(style="res_card.TLabelframe")
+
     widget.configure(style="on_res_card.TLabelframe")
 
     map_widget.set_address(addr, marker=True)
+
+
+def add_button_handler(event, data):
+    mydb, mycursor = connectDB("project")
+    print(data)
+    tk.messagebox.showinfo("Confirm", "Added to your mark list!")
+    executeCommand(
+        mydb,
+        mycursor,
+        "CREATE TABLE if not exists user_shop(id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), age INT)",
+    )
+    executeCommand(mydb, mycursor, "INSERT INTO drivers (name, age) VALUES ('Mika', 54)")
 
 
 class Map(ttk.Frame):
@@ -91,11 +108,14 @@ class Map(ttk.Frame):
         h = int(map_frame.winfo_screenheight())
 
         self.map_widget = tkintermapview.TkinterMapView(map_border, width=w, height=h)
+        # self.map_widget.set_tile_server(
+        #     "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22
+        # )  # google normal
         self.map_widget.pack(padx=(0, 0))
         # map_widget.set_position(37.588227,126.993606) # SKKU address
         # map_widget.set_address("25-2 Sungkyunkwan-ro, Jongno-gu, Seoul") # SKKU seoul campus
         # map_widget.set_address("Gyeonggi-do, Suwon-si, Jangan-gu, Cheoncheon-dong, 서부로 2066")
-        self.map_widget.set_address("서울특별시 종로구 성균관로 25-2", marker=True).set_text("성균관대 인문캠")
+        self.map_widget.set_address("성균관대학교 자연과학캠퍼스", marker=True).set_text("성균관대 자연캠")
         self.map_widget.set_zoom(15)
         self.map_widget.pack()
 
