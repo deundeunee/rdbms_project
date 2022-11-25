@@ -1,4 +1,4 @@
-from tkinter import ttk
+from tkinter import messagebox, ttk
 import tkinter as tk
 
 import requests
@@ -30,12 +30,41 @@ for news in news_title:
     url = news["href"]
     # print(url,'\n')
 
+# 데이터 프레임으로 만들어서 SQL로 넣기
+import mysql.connector
+
+
+def connectDB(db_use):
+    mydb = mysql.connector.connect(
+        host="localhost", user="root", passwd="ruddnjs12!", database=db_use
+    )
+    mycursor = mydb.cursor(buffered=True)
+    mycursor.execute("use " + db_use)
+
+    return mydb, mycursor
+
+
+db, c = connectDB("project")
+
+
+def add_click(k):
+    a, b = news_title[k].get_text(), news_title[k]["href"]
+    query = "insert into my_news (news_title, url) values (%s,%s)"
+    c.execute(query, (a, b))
+    db.commit()
+    messagebox.showinfo("Success", "This news is added in your page")
+
 
 class News(ttk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         middle_frame = parent.get_frame("main").middle_frame
-
-        for news in news_list:
-            label = tk.Label(middle_frame, text=news, bg="white")
-            label.pack(pady=5)
+        middle_frame.columnconfigure(0, weight=1)
+        middle_frame.columnconfigure(1, weight=2)
+        for k, news in enumerate(news_list):
+            label2 = tk.Label(middle_frame, text=news, bg="white", pady=5)
+            label2.grid(row=k, column=1, pady=5, sticky=tk.W + tk.E + tk.N + tk.S)
+            button = tk.Button(
+                middle_frame, text="Add", height=3, width=5, command=lambda: add_click(k)
+            )
+            button.grid(row=k, column=2, padx=5)
