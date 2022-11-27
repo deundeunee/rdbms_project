@@ -32,16 +32,8 @@ for news in news_title:
 
 # 데이터 프레임으로 만들어서 SQL로 넣기
 db, cursor = connectDB("project")
-
-
-def add_click(k):
-    cursor.execute(
-        "CREATE TABLE if not exists my_news(id INT AUTO_INCREMENT PRIMARY KEY, news_title VARCHAR(255), url VARCHAR(255))"
-    )
-    query = "insert into my_news (news_title, url) values (%s,%s)"
-    cursor.execute(query, (news_title[k].get_text(), news_title[k]["href"]))
-    db.commit()
-    messagebox.showinfo("Success", "This news is added in your page")
+#
+# def number (k):
 
 
 class News(ttk.Frame):
@@ -54,6 +46,22 @@ class News(ttk.Frame):
             label2 = tk.Label(middle_frame, text=news, bg="white", pady=5)
             label2.grid(row=k, column=1, pady=5, sticky=tk.W + tk.E + tk.N + tk.S)
             button = tk.Button(
-                middle_frame, text="Add", height=3, width=5, command=lambda: add_click(k)
+                middle_frame,
+                text="Add",
+                height=3,
+                width=5,
+                activebackground="red",
+                command=lambda k=k: add_click(k),
             )
             button.grid(row=k, column=2, padx=5)
+
+
+def add_click(k):
+    cursor.execute(
+        "CREATE TABLE if not exists my_news(id INT AUTO_INCREMENT PRIMARY KEY, news_title VARCHAR(255), url VARCHAR(255))"
+    )
+    query = "insert into my_news (news_title, url) values (%s,%s)"
+    cursor.execute(query, (news_title[k].get_text(), news_title[k]["href"]))
+    db.commit()
+    messagebox.showinfo("Success", "This news is added in your page")
+    print(k)
