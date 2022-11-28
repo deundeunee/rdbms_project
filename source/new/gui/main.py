@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from main_frame import MainFrame
 from nav_frame import NavFrame
+from connection import *
+from login import Login
 
 # Create top, middle, and bottom frames
 class BaseFrames(ttk.Frame):
@@ -24,7 +27,7 @@ class BaseFrames(ttk.Frame):
         self.main_frame = MainFrame(parent, style="main.TFrame")
         self.main_frame.place(relwidth=0.85, relheight=1, relx=0.15)
 
-        self.navigate_frame.create_index(self)
+        Login(self).place(relwidth=1)
 
     def get_frame(self, frame):
         if frame == "top":

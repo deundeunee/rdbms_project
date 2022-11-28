@@ -1,18 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-
-import mysql.connector
-
-
-def connectDB(db_use):
-    mydb = mysql.connector.connect(
-        host="localhost", user="root", passwd="ruddnjs12!", database=db_use
-    )
-    mycursor = mydb.cursor(buffered=True)
-    mycursor.execute("use " + db_use)
-
-    return mydb, mycursor
-
+from connection import *
 
 db, c = connectDB("project")
 

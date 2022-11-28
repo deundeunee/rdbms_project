@@ -79,7 +79,7 @@ def add_button_handler(event, data):
     tk.messagebox.showinfo("Confirm", "Added to your mark list!")
 
     cursor.execute(
-        "CREATE TABLE if not exists my_place(id INT AUTO_INCREMENT PRIMARY KEY, shop_id INT)"
+        "CREATE TABLE if not exists my_place(id INT AUTO_INCREMENT PRIMARY KEY, shop_id INT, memo VARCHAR(255))"
     )
     query = "insert into my_place (shop_id) values (%s)"
     print(data[0])

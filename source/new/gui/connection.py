@@ -22,12 +22,12 @@ def executeCommand(mydb, mycursor, command):
         # Rollback in case there is any error
         mydb.rollback()
 
-
     try:
         myResult = mycursor.fetchall()
         return myResult
     except:
         print("result fetch error")
+
 
 # Build an sql query
 def build_sql_query(fields, table, conditions=None):
