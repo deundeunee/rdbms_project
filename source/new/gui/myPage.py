@@ -95,7 +95,11 @@ class My_page(ttk.Frame):
         middle_frame.columnconfigure(2, weight=1)
         middle_frame.columnconfigure(3, weight=1)
         middle_frame.columnconfigure(4, weight=1)
-        c.execute("select * from my_place where user_id = '" + parent.user_id + "'")
+        c.execute(
+            "select p. my_place_id, p. user_id, p.shop_id, o.상호명, p.memo as shop_name from my_place p join original_shop_seoul o on p.shop_id=o.상가업소번호 where user_id = '"
+            + parent.user_id
+            + "'"
+        )
         result = c.fetchall()
         # Label in top row
         label2 = tk.Label(
