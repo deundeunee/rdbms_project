@@ -4,6 +4,7 @@ from connection import *
 
 
 def news(middle_frame, parent):
+
     db, c = connectDB("project")
 
     # clear all widget
@@ -72,6 +73,14 @@ def place(middle_frame, parent):
 class My_page(ttk.Frame):
     def __init__(self, parent, *args, **kwargs):
         db, c = connectDB("project")
+        c.execute(
+            "CREATE TABLE if not exists my_place(my_place_id INT AUTO_INCREMENT PRIMARY KEY, user_id  VARCHAR(255), shop_id INT, memo VARCHAR(255))"
+        )
+        db.commit()
+        c.execute(
+            "CREATE TABLE if not exists my_news(news_id INT AUTO_INCREMENT PRIMARY KEY, user_id  VARCHAR(255), news_title VARCHAR(255), url VARCHAR(255))"
+        )
+        db.commit()
 
         super().__init__(parent, *args, **kwargs)
         middle_frame = parent.get_frame("main").middle_frame
@@ -103,6 +112,16 @@ class My_page(ttk.Frame):
             res_label.grid(row=1, column=k)
             # start from row=1, col=0
             k = k + 1
+        entry = tk.Entry(middle_frame)
+
+        def showInput(event):
+            query = """update my_place set memo=%s where shop_id=%s """
+            memo = entry.get()
+            c.execute(query, (memo, res[1]))
+            db.commit()
+            res_label.config(text=memo)
+            # entry.delete(0, END)
+            messagebox.showinfo("Success", "This memo is added in your page")
 
         for res in result:
             for j in range(len(res)):
@@ -111,15 +130,6 @@ class My_page(ttk.Frame):
                 res_label.grid(row=i, column=j)
             entry = tk.Entry(middle_frame)
             entry.grid(row=i, column=len(res))
-
-            def showInput(event):
-                query = """update my_place set memo=%s where shop_id=%s """
-                memo = entry.get()
-                c.execute(query, (memo, res[1]))
-                db.commit()
-                res_label.config(text=memo)
-                # entry.delete(0, END)
-                messagebox.showinfo("Success", "This memo is added in your page")
 
             i = i + 1
         entry.bind("<Return>", showInput)
