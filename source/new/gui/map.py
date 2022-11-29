@@ -1,3 +1,4 @@
+import re
 import tkinter as tk
 from tkinter import ttk
 import tkintermapview
@@ -68,9 +69,10 @@ def display(addr_frame, map_widget, result, font, parent):
         res_card = ttk.LabelFrame(addr_frame, style="res_card.TLabelframe")
         res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
 
-        if res[1] in spc_list:
-            res_card = ttk.LabelFrame(addr_frame, style="spc_card.TLabelframe")
-            res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
+        for spc in spc_list:
+            if re.search(spc, res[1]):
+                res_card = ttk.LabelFrame(addr_frame, style="spc_card.TLabelframe")
+                res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
 
         for i in range(1, len(res)):
 
