@@ -5,6 +5,36 @@ import tkintermapview
 from optionMenu import OptionMenuSet
 from connection import *
 
+spc_list = [
+    "파리바게트",
+    "파리바게뜨",
+    "베스킨라빈스",
+    "던킨도너츠",
+    "삼립",
+    "파리크라상",
+    "패션5",
+    "빚은",
+    "샤니",
+    "베이커리팩토리",
+    "쉐이크쉑",
+    "에그슬럿",
+    "라그릴리아",
+    "피그인더가든",
+    "퀸즈파크",
+    "시티델리",
+    "베라",
+    "라뜰리에",
+    "그릭슈바인",
+    "스트릿",
+    "디퀸즈",
+    "리나스",
+    "한상차림",
+    "잠바주스",
+    "파스쿠찌",
+    "커피앳웍스",
+    "티트라",
+]
+
 
 def button_click(store, gu, dong, addr_frame, map_widget, parent):
     mydb, mycursor = connectDB("project")
@@ -33,11 +63,17 @@ def display(addr_frame, map_widget, result, font, parent):
     for res in result:
         style = ttk.Style()
         style.configure("res_card.TLabelframe", background="white", padding=5)
+        style.configure("spc_card.TLabelframe", background="red", padding=5)
 
         res_card = ttk.LabelFrame(addr_frame, style="res_card.TLabelframe")
         res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
 
+        if res[1] in spc_list:
+            res_card = ttk.LabelFrame(addr_frame, style="spc_card.TLabelframe")
+            res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
+
         for i in range(1, len(res)):
+
             res_label = tk.Label(
                 res_card,
                 text=res[i],
@@ -90,34 +126,7 @@ def add_button_handler(event, data, parent):
 
 
 def spc_table_create():
-    spc_list = [
-        "파리바게트",
-        "베스킨라빈스",
-        "던킨도너츠",
-        "삼립",
-        "파리크라상",
-        "패션5",
-        "빚은",
-        "샤니",
-        "베이커리팩토리",
-        "쉐이크쉑",
-        "에그슬럿",
-        "라그릴리아",
-        "피그인더가든",
-        "퀸즈파크",
-        "시티델리",
-        "베라",
-        "라뜰리에",
-        "그릭슈바인",
-        "스트릿",
-        "디퀸즈",
-        "리나스",
-        "한상차림",
-        "잠바주스",
-        "파스쿠찌",
-        "커피앳웍스",
-        "티트라",
-    ]
+
     db, cursor = connectDB("project")
     cursor.execute(
         "CREATE TABLE if not exists spc_brand(id INT AUTO_INCREMENT PRIMARY KEY, brand_name VARCHAR(255))"
