@@ -18,26 +18,26 @@ for i in range(len(news_title)):
         news_title[i].get_text() + "\n" + news_title[i]["href"] + "\n" + news_info[i].get_text()
     )
 
-# print(news_list)
-# for info in news_info:
-# print(info.get_text())
 
 print("number of news titles", len(news_title))
 for news in news_title:
     title = news.get_text()
-    # print(title)
-
     url = news["href"]
-    # print(url,'\n')
-
-# 데이터 프레임으로 만들어서 SQL로 넣기
-db, cursor = connectDB("project")
-#
-# def number (k):
 
 
 class News(ttk.Frame):
     def __init__(self, parent, *args, **kwargs):
+        def add_click(k, parent):
+            db, cursor = connectDB("project")
+            cursor.execute(
+                "CREATE TABLE if not exists my_news(news_id INT AUTO_INCREMENT PRIMARY KEY, user_id  VARCHAR(255), news_title VARCHAR(255), url VARCHAR(255))"
+            )
+            query = "insert into my_news (user_id, news_title, url) values (%s,%s,%s)"
+            cursor.execute(query, (parent.user_id, news_title[k].get_text(), news_title[k]["href"]))
+            db.commit()
+            messagebox.showinfo("Success", "This news is added in your page")
+            print(k)
+
         super().__init__(parent, *args, **kwargs)
         middle_frame = parent.get_frame("main").middle_frame
         middle_frame.columnconfigure(0, weight=1)
@@ -51,17 +51,6 @@ class News(ttk.Frame):
                 height=3,
                 width=5,
                 activebackground="red",
-                command=lambda k=k: add_click(k),
+                command=lambda k=k: add_click(k, parent),
             )
             button.grid(row=k, column=2, padx=5)
-
-
-def add_click(k):
-    cursor.execute(
-        "CREATE TABLE if not exists my_news(id INT AUTO_INCREMENT PRIMARY KEY, news_title VARCHAR(255), url VARCHAR(255))"
-    )
-    query = "insert into my_news (news_title, url) values (%s,%s)"
-    cursor.execute(query, (news_title[k].get_text(), news_title[k]["href"]))
-    db.commit()
-    messagebox.showinfo("Success", "This news is added in your page")
-    print(k)

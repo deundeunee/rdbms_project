@@ -6,7 +6,7 @@ from optionMenu import OptionMenuSet
 from connection import *
 
 
-def button_click(store, gu, dong, addr_frame, map_widget):
+def button_click(store, gu, dong, addr_frame, map_widget, parent):
     mydb, mycursor = connectDB("project")
     result = executeCommand(
         mydb,
@@ -21,12 +21,12 @@ def button_click(store, gu, dong, addr_frame, map_widget):
     )
     string = "Store entered is " + store + " and addr entered is " + gu + " " + dong
 
-    display(addr_frame, map_widget, result, ("Arial", 10))
+    display(addr_frame, map_widget, result, ("Arial", 10), parent)
     print(string)
     return result
 
 
-def display(addr_frame, map_widget, result, font):
+def display(addr_frame, map_widget, result, font, parent):
     idx = 0
     addr_frame.grid_columnconfigure(0, weight=1)  # reset grid
 
@@ -54,7 +54,9 @@ def display(addr_frame, map_widget, result, font):
 
         add_button = tk.Button(addr_frame, text="add")
         add_button.grid(row=idx, column=1, padx=(0, 10))
-        add_button.bind("<Button-1>", lambda event, data=res: add_button_handler(event, data))
+        add_button.bind(
+            "<Button-1>", lambda event, data=res: add_button_handler(event, data, parent)
+        )
 
         idx += 1
 
@@ -73,17 +75,17 @@ def active(event, widget, addr_frame, addr, map_widget):
     map_widget.set_address(addr, marker=True)
 
 
-def add_button_handler(event, data):
+def add_button_handler(event, data, parent):
     db, cursor = connectDB("project")
     print(data)
     tk.messagebox.showinfo("Confirm", "Added to your mark list!")
 
     cursor.execute(
-        "CREATE TABLE if not exists my_place(id INT AUTO_INCREMENT PRIMARY KEY, shop_id INT, memo VARCHAR(255))"
+        "CREATE TABLE if not exists my_place(my_place_id INT AUTO_INCREMENT PRIMARY KEY, user_id  VARCHAR(255), shop_id INT, memo VARCHAR(255))"
     )
-    query = "insert into my_place (shop_id) values (%s)"
+    query = "insert into my_place (user_id, shop_id) values (%s, %s)"
     print(data[0])
-    cursor.execute(query, (data[0],))
+    cursor.execute(query, (parent.user_id, data[0]))
     db.commit()
 
 
@@ -135,7 +137,7 @@ class Map(ttk.Frame):
 
         search_frame = tk.Frame(middle_frame, bg="lavender", padx=10, pady=10)
         search_frame.place(relwidth=1, relheight=0.1)
-        self.search_widget(search_frame)
+        self.search_widget(search_frame, parent)
 
         self.addr_frame = tk.Frame(middle_frame, bg="white", padx=10, pady=10)
         self.addr_frame.place(relwidth=0.3, relheight=0.9, rely=0.1, x=10, anchor="nw")
@@ -161,7 +163,7 @@ class Map(ttk.Frame):
         self.map_widget.set_zoom(15)
         self.map_widget.pack()
 
-    def search_widget(self, frame):
+    def search_widget(self, frame, parent):
         addr_label_frame = tk.Frame(frame)
         addr_label_frame.place(relwidth=0.15, relheight=1)
 
@@ -179,6 +181,7 @@ class Map(ttk.Frame):
                 option.get_dong(),
                 self.addr_frame,
                 self.map_widget,
+                parent,
             ),
         )
         button.place(

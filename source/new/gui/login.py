@@ -10,18 +10,20 @@ class Login(ttk.Frame):
         middle_frame = parent.get_frame("main").middle_frame
 
         # 사용자 id와 password를 저장하는 변수 생성
-        user_id, password = tk.StringVar(), tk.StringVar()
+        user_id, password = parent.user_id, parent.password
 
         def check_login():
             db, cursor = connectDB("project")
             result = executeCommand(
                 db, cursor, "SELECT password FROM user WHERE (id = '" + user_id.get() + "')"
             )
-            try:
-                if result[0][0] == password.get():
-                    messagebox.showinfo("Success", "Login Success!")
-                    parent.navigate_frame.create_index(parent)
-            except:
+
+            if result[0][0] == password.get():
+                parent.user_id = user_id.get()
+                parent.password = password.get()
+                messagebox.showinfo("Success", "Login Success!")
+                parent.navigate_frame.create_index(parent)
+            else:
                 messagebox.showinfo("Fail", "Invalid id or password.")
 
         def check_signup():

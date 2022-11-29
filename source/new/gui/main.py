@@ -27,6 +27,8 @@ class BaseFrames(ttk.Frame):
         self.main_frame = MainFrame(parent, style="main.TFrame")
         self.main_frame.place(relwidth=0.85, relheight=1, relx=0.15)
 
+        self.user_id, self.password = tk.StringVar(), tk.StringVar()
+
         Login(self).place(relwidth=1)
 
     def get_frame(self, frame):
