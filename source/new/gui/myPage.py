@@ -29,11 +29,13 @@ def news(middle_frame, parent):
         # start from row=1, col=0
         k = k + 1
     for res in result:
+        middle_frame.rowconfigure(i, weight=0)
         for j in range(len(res)):
             # print(res[j])
             res_label = tk.Label(middle_frame, text=res[j], bg="white")
             res_label.grid(row=i, column=j)
         i = i + 1
+    middle_frame.rowconfigure(i, weight=1)
 
 
 def place(middle_frame, parent):
@@ -42,7 +44,6 @@ def place(middle_frame, parent):
     # clear all widget
     for widget in middle_frame.winfo_children():
         widget.destroy()
-    middle_frame.pack_forget()
 
     # activate query
     c.execute(
@@ -65,6 +66,7 @@ def place(middle_frame, parent):
         # start from row=1, col=0
         k = k + 1
     for res in result:
+        middle_frame.rowconfigure(i, weight=0)
         for j in range(len(res)):
             # print(res[j])
             res_label = tk.Label(middle_frame, text=res[j], bg="white")
@@ -72,6 +74,7 @@ def place(middle_frame, parent):
         entry = tk.Entry(middle_frame)
         entry.grid(row=i, column=len(res))
         i = i + 1
+    middle_frame.rowconfigure(i, weight=1)
 
 
 class My_page(ttk.Frame):
@@ -91,10 +94,7 @@ class My_page(ttk.Frame):
         top_frame = parent.get_frame("main").top_frame
 
         middle_frame.columnconfigure(0, weight=1)
-        middle_frame.columnconfigure(1, weight=1)
-        middle_frame.columnconfigure(2, weight=1)
-        middle_frame.columnconfigure(3, weight=1)
-        middle_frame.columnconfigure(4, weight=1)
+        middle_frame.columnconfigure(5, weight=1)
         c.execute(
             "select p. my_place_id, p. user_id, p.shop_id, o.상호명, p.memo as shop_name from my_place p join original_shop_seoul o on p.shop_id=o.상가업소번호 where user_id = '"
             + parent.user_id
@@ -132,13 +132,15 @@ class My_page(ttk.Frame):
             messagebox.showinfo("Success", "This memo is added in your page")
 
         for res in result:
+            middle_frame.rowconfigure(i, weight=0)
             for j in range(len(res)):
                 # print(res[j])
                 res_label = tk.Label(middle_frame, text=res[j], bg="white")
                 res_label.grid(row=i, column=j)
             entry = tk.Entry(middle_frame)
             entry.grid(row=i, column=len(res))
-
             i = i + 1
+        middle_frame.rowconfigure(i, weight=1)
+
         entry.bind("<Return>", showInput)
         print(entry.get())
