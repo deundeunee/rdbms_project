@@ -27,8 +27,8 @@ class Login(ttk.Frame):
                 messagebox.showinfo("Fail", "Invalid id or password.")
 
         def check_signup():
+            db, cursor = connectDB("project")
             try:
-                db, cursor = connectDB("project")
                 cursor.execute(
                     "CREATE TABLE if not exists user(id VARCHAR(255) PRIMARY KEY, password VARCHAR(255))"
                 )

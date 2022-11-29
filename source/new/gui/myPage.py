@@ -13,10 +13,10 @@ def news(middle_frame, parent):
     middle_frame.pack_forget()
 
     # activate query
-    c.execute("select * from my_news  where user_id = '" + parent.user_id + "'")
+    c.execute("select * from my_news where user_id = '" + parent.user_id + "'")
     result = c.fetchall()
     # Label in top row
-    label2 = tk.Label(middle_frame, text="YOUR PAGE", bg="white", font=("Arial", 14))
+    label2 = tk.Label(middle_frame, text=parent.user_id + "'s PAGE", bg="white", font=("Arial", 14))
     label2.grid(row=0, column=1, columnspan=2)
 
     # Print table columns, starting from row 1
@@ -48,7 +48,7 @@ def place(middle_frame, parent):
     c.execute("select * from my_place where user_id = '" + parent.user_id + "'")
     result = c.fetchall()
     # Label in top row
-    label2 = tk.Label(middle_frame, text="YOUR PAGE", bg="white", font=("Arial", 14))
+    label2 = tk.Label(middle_frame, text=parent.user_id + "'s PAGE", bg="white", font=("Arial", 14))
     label2.grid(row=0, column=1, columnspan=2)
 
     # Print table columns, starting from row 1

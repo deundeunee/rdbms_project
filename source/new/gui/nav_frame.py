@@ -81,6 +81,8 @@ class NavFrame(ttk.Frame):
             def logout():
                 for widget in self.winfo_children():
                     widget.destroy()
+
+                parent.user_id, parent.password = tk.StringVar(), tk.StringVar()
                 ttk.Label(
                     self,
                     text="PlaceToGo",
