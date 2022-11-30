@@ -50,7 +50,6 @@ class News(ttk.Frame):
                 text="Add",
                 height=3,
                 width=5,
-                activebackground="red",
                 command=lambda k=k: add_click(k, parent),
             )
             button.grid(row=k, column=2, padx=5)

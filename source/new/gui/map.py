@@ -64,7 +64,7 @@ def display(addr_frame, map_widget, result, font, parent):
     for res in result:
         style = ttk.Style()
         style.configure("res_card.TLabelframe", background="white", padding=5)
-        style.configure("spc_card.TLabelframe", background="red", padding=5)
+        style.configure("spc_card.TLabelframe", background="palevioletred", padding=5)
 
         res_card = ttk.LabelFrame(addr_frame, style="res_card.TLabelframe")
         res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
@@ -150,7 +150,7 @@ class Map(ttk.Frame):
         search_frame.place(relwidth=1, relheight=0.1)
         self.search_widget(search_frame, parent)
 
-        self.addr_frame = tk.Frame(middle_frame, bg="white", padx=10, pady=10)
+        self.addr_frame = tk.Frame(middle_frame, bg="ghostwhite", padx=10, pady=10)
         self.addr_frame.place(relwidth=0.3, relheight=0.9, rely=0.1, x=10, anchor="nw")
 
         map_frame = tk.Frame(middle_frame, bg="lavender", padx=10)

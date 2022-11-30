@@ -47,7 +47,7 @@ def place(middle_frame, parent):
 
     # activate query
     c.execute(
-        "select p. my_place_id, p. user_id, p.shop_id, o.상호명, p.memo as shop_name from my_place p join original_shop_seoul o on p.shop_id=o.상가업소번호 where user_id = '"
+        "select p. my_place_id, o.상호명, p.memo from my_place p join original_shop_seoul o on p.shop_id=o.상가업소번호 where user_id = '"
         + parent.user_id
         + "'"
     )
@@ -55,6 +55,7 @@ def place(middle_frame, parent):
     # Label in top row
     label2 = tk.Label(middle_frame, text=parent.user_id + "'s PAGE", bg="white", font=("Arial", 14))
     label2.grid(row=0, column=1, columnspan=2)
+    middle_frame.rowconfigure(0, weight=1)
 
     # Print table columns, starting from row 1
     columns = c.column_names
@@ -94,9 +95,9 @@ class My_page(ttk.Frame):
         top_frame = parent.get_frame("main").top_frame
 
         middle_frame.columnconfigure(0, weight=1)
-        middle_frame.columnconfigure(5, weight=1)
+        middle_frame.columnconfigure(4, weight=1)
         c.execute(
-            "select p. my_place_id, p. user_id, p.shop_id, o.상호명, p.memo as shop_name from my_place p join original_shop_seoul o on p.shop_id=o.상가업소번호 where user_id = '"
+            "select p. my_place_id, o.상호명, p.memo from my_place p join original_shop_seoul o on p.shop_id=o.상가업소번호 where user_id = '"
             + parent.user_id
             + "'"
         )

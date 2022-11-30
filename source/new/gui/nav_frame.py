@@ -13,10 +13,10 @@ class NavFrame(ttk.Frame):
         # Title
         ttk.Label(
             self,
-            text="PlaceToGo",
+            text="SPC Boycott",
             font=("Arial", 20, "bold"),
             background="pink",
-            padding=20,
+            padding=15,
             anchor="center",
         ).grid(row=0)
 
@@ -82,13 +82,16 @@ class NavFrame(ttk.Frame):
                 for widget in self.winfo_children():
                     widget.destroy()
 
+                parent.main_frame.middle_frame.columnconfigure(0, weight=0)
+                parent.main_frame.middle_frame.columnconfigure(4, weight=0)
+
                 parent.user_id, parent.password = tk.StringVar(), tk.StringVar()
                 ttk.Label(
                     self,
-                    text="PlaceToGo",
+                    text="SPC Boycott",
                     font=("Arial", 20, "bold"),
                     background="pink",
-                    padding=20,
+                    padding=15,
                     anchor="center",
                 ).grid(row=0)
                 self.clear_top_middle(parent)

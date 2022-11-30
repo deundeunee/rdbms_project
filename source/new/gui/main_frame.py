@@ -24,7 +24,3 @@ class MainFrame(ttk.Frame):
         # Create a third frame bottom_frame
         self.bottom_frame = tk.Frame(self, padx=10, pady=10, background="white")
         self.bottom_frame.place(relwidth=1, relheight=0.1, rely=0.9)
-
-        # Clear button clears middle frame
-        clear_button = tk.Button(self.bottom_frame, text="Clear")
-        clear_button.pack(side=tk.RIGHT, anchor=tk.S)

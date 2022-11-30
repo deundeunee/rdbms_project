@@ -23,8 +23,6 @@ class OptionMenuSet(Frame):
         self.gu_dong_dict = {}
         for key, value in gu_dong_result:
             self.gu_dong_dict.setdefault(key, []).append(value)
-        # gu_list = [res[0] for res in result]
-        print(self.gu_dong_dict)
 
         self.variable_gu = StringVar(self)
         self.variable_dong = StringVar(self)

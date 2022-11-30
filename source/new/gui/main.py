@@ -43,8 +43,8 @@ class BaseFrames(ttk.Frame):
 
 
 window = tk.Tk()
-window.geometry("1280x720")
-window.title("PlaceToGo - boycott helper")
+window.geometry("1380x720")
+window.title("SPC Boycott Helper")
 
 base = BaseFrames(window)
 
