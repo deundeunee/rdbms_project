@@ -14,16 +14,19 @@ class Login(ttk.Frame):
 
         def check_login():
             db, cursor = connectDB("project")
-            result = executeCommand(
-                db, cursor, "SELECT password FROM user WHERE (id = '" + user_id.get() + "')"
-            )
+            try:
+                result = executeCommand(
+                    db, cursor, "SELECT password FROM user WHERE (id = '" + user_id.get() + "')"
+                )
 
-            if result[0][0] == password.get():
-                parent.user_id = user_id.get()
-                parent.password = password.get()
-                messagebox.showinfo("Success", "Login Success!")
-                parent.navigate_frame.create_index(parent)
-            else:
+                if result[0][0] == password.get():
+                    parent.user_id = user_id.get()
+                    parent.password = password.get()
+                    messagebox.showinfo("Success", "Login Success!")
+                    parent.navigate_frame.create_index(parent)
+                else:
+                    messagebox.showinfo("Fail", "Invalid id or password.")
+            except:
                 messagebox.showinfo("Fail", "Invalid id or password.")
 
         def check_signup():
@@ -54,6 +57,12 @@ class Login(ttk.Frame):
             row=3, column=3, columnspan=1, padx=10, pady=10
         )
         middle_frame.rowconfigure(0, weight=1)
+        middle_frame.rowconfigure(1, weight=0)
+        middle_frame.rowconfigure(2, weight=0)
+        middle_frame.rowconfigure(3, weight=0)
         middle_frame.rowconfigure(4, weight=1)
         middle_frame.columnconfigure(0, weight=1)
+        middle_frame.columnconfigure(1, weight=0)
+        middle_frame.columnconfigure(2, weight=0)
+        middle_frame.columnconfigure(3, weight=0)
         middle_frame.columnconfigure(4, weight=1)

@@ -48,7 +48,7 @@ def button_click(store, gu, dong, addr_frame, map_widget, parent):
         + gu
         + "') and (법정동명 ='"
         + dong
-        + "')) limit 20",
+        + "')) limit 100",
     )
     string = "Store entered is " + store + " and addr entered is " + gu + " " + dong
 
@@ -85,7 +85,7 @@ def display(addr_frame, map_widget, result, font, parent):
             res_label.grid(row=i, column=0, sticky="w")
             res_card.bind(
                 "<Button-1>",
-                lambda event, widget=res_card, addr=res[1]: active(
+                lambda event, widget=res_card, addr=res[2]: active(
                     event, widget, addr_frame, addr, map_widget
                 ),
             )
@@ -152,6 +152,10 @@ class Map(ttk.Frame):
 
         self.addr_frame = tk.Frame(middle_frame, bg="ghostwhite", padx=10, pady=10)
         self.addr_frame.place(relwidth=0.3, relheight=0.9, rely=0.1, x=10, anchor="nw")
+
+        # scrollbar = tk.Scrollbar(self.addr_frame)
+        # scrollbar.place(anchor="e", )
+        # scrollbar.config(command=self.addr_frame)
 
         map_frame = tk.Frame(middle_frame, bg="lavender", padx=10)
         map_frame.place(relwidth=0.7, relheight=0.9, relx=0.3, rely=0.1)

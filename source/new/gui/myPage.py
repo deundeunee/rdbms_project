@@ -17,7 +17,7 @@ def news(middle_frame, parent):
     result = c.fetchall()
     # Label in top row
     label2 = tk.Label(middle_frame, text=parent.user_id + "'s PAGE", bg="white", font=("Arial", 14))
-    label2.grid(row=0, column=1, columnspan=2)
+    label2.grid(row=0, column=0, columnspan=4)
 
     # Print table columns, starting from row 1
     columns = c.column_names
@@ -35,10 +35,20 @@ def news(middle_frame, parent):
             res_label = tk.Label(middle_frame, text=res[j], bg="white")
             res_label.grid(row=i, column=j)
         i = i + 1
-    middle_frame.rowconfigure(i, weight=1)
+    middle_frame.rowconfigure(len(result) + 2, weight=1)
 
 
 def place(middle_frame, parent):
+    def showInput(event, entry, data, label):
+        print(data)
+        query = """update my_place set memo=%s where ((my_place_id=%s) and (user_id=%s))"""
+        memo = entry.get()
+        c.execute(query, (memo, data[0], parent.user_id))
+        db.commit()
+        label.config(text=memo)
+        # entry.delete(0, END)
+        messagebox.showinfo("Success", "This memo is added in your page")
+
     db, c = connectDB("project")
 
     # clear all widget
@@ -54,16 +64,14 @@ def place(middle_frame, parent):
     result = c.fetchall()
     # Label in top row
     label2 = tk.Label(middle_frame, text=parent.user_id + "'s PAGE", bg="white", font=("Arial", 14))
-    label2.grid(row=0, column=1, columnspan=2)
-    middle_frame.rowconfigure(0, weight=1)
-
+    label2.grid(row=0, column=0, columnspan=4)
     # Print table columns, starting from row 1
     columns = c.column_names
     k = 0
     i = 2
     for cols in columns:
-        res_label = tk.Label(middle_frame, text=cols)
-        res_label.grid(row=1, column=k)
+        col_label = tk.Label(middle_frame, text=cols)
+        col_label.grid(row=1, column=k)
         # start from row=1, col=0
         k = k + 1
     for res in result:
@@ -74,6 +82,12 @@ def place(middle_frame, parent):
             res_label.grid(row=i, column=j)
         entry = tk.Entry(middle_frame)
         entry.grid(row=i, column=len(res))
+        entry.bind(
+            "<Return>",
+            lambda event, data=res, entry=entry, label=res_label: showInput(
+                event, entry, data, label
+            ),
+        )
         i = i + 1
     middle_frame.rowconfigure(i, weight=1)
 
@@ -95,53 +109,19 @@ class My_page(ttk.Frame):
         top_frame = parent.get_frame("main").top_frame
 
         middle_frame.columnconfigure(0, weight=1)
-        middle_frame.columnconfigure(4, weight=1)
-        c.execute(
-            "select p. my_place_id, o.상호명, p.memo from my_place p join original_shop_seoul o on p.shop_id=o.상가업소번호 where user_id = '"
-            + parent.user_id
-            + "'"
-        )
-        result = c.fetchall()
+        middle_frame.columnconfigure(1, weight=1)
+        middle_frame.columnconfigure(2, weight=1)
+        middle_frame.columnconfigure(3, weight=1)
+
         # Label in top row
         label2 = tk.Label(
             middle_frame, text=parent.user_id + "'s PAGE", bg="white", font=("Arial", 14)
         )
-        label2.grid(row=0, column=1, columnspan=2)
+        label2.grid(row=0, column=0, columnspan=4)
 
         button1 = tk.Button(top_frame, text="News", command=lambda: news(middle_frame, parent))
         button1.pack(side="right", padx=10)
         button2 = tk.Button(top_frame, text="Place", command=lambda: place(middle_frame, parent))
         button2.pack(side="right", padx=5)
-        # Print table columns, starting from row 1
-        columns = c.column_names
-        k = 0
-        i = 2
-        for cols in columns:
-            res_label = tk.Label(middle_frame, text=cols)
-            res_label.grid(row=1, column=k)
-            # start from row=1, col=0
-            k = k + 1
-        entry = tk.Entry(middle_frame)
 
-        def showInput(event):
-            query = """update my_place set memo=%s where shop_id=%s """
-            memo = entry.get()
-            c.execute(query, (memo, res[1]))
-            db.commit()
-            res_label.config(text=memo)
-            # entry.delete(0, END)
-            messagebox.showinfo("Success", "This memo is added in your page")
-
-        for res in result:
-            middle_frame.rowconfigure(i, weight=0)
-            for j in range(len(res)):
-                # print(res[j])
-                res_label = tk.Label(middle_frame, text=res[j], bg="white")
-                res_label.grid(row=i, column=j)
-            entry = tk.Entry(middle_frame)
-            entry.grid(row=i, column=len(res))
-            i = i + 1
-        middle_frame.rowconfigure(i, weight=1)
-
-        entry.bind("<Return>", showInput)
-        print(entry.get())
+        place(middle_frame, parent)
