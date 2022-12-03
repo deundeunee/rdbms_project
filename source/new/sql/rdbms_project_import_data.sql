@@ -18,3 +18,9 @@ INTO TABLE original_shop_seoul
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS; 
+
+set sql_safe_updates=0;
+DELETE FROM project.original_shop_seoul where 상호명 like "%파리바%";
+INSERT INTO original_shop_seoul (상호명, 시군구명, 법정동명, 도로명주소)
+SELECT store_title, gu, dong, store_addr
+FROM parisbaguette_gu_dong;
