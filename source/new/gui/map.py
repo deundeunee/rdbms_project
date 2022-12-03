@@ -5,7 +5,6 @@ import tkintermapview
 
 from optionMenu import OptionMenuSet
 from connection import *
-from test import *
 
 spc_list = [
     "파리바게트",
@@ -158,16 +157,7 @@ class Map(ttk.Frame):
         self.search_widget(search_frame, parent)
 
         self.addr_frame = tk.Frame(middle_frame, bg="ghostwhite", padx=10, pady=10)
-        self.addr_frame.place(relwidth=0.29, relheight=0.9, rely=0.1, x=10, anchor="nw")
-
-        my_canvas = tk.Canvas(self.addr_frame)
-        my_canvas.pack(side=tk.LEFT, fill=tk.Y, expand=1)
-        my_scrollbar = ttk.Scrollbar(self.addr_frame, orient=tk.VERTICAL, command=my_canvas.yview)
-        my_scrollbar.pack(side=tk.LEFT, fill=tk.Y)
-        my_canvas.configure(yscrollcommand=my_scrollbar.set)
-        my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
-        self.scrollable_frame = tk.Frame(my_canvas, bg="ghostwhite")
-        my_canvas.create_window((0,0), window=self.scrollable_frame, anchor=tk.NW)
+        self.addr_frame.place(relwidth=0.3, relheight=0.9, rely=0.1, x=10, anchor="nw")
 
         map_frame = tk.Frame(middle_frame, bg="lavender", padx=10)
         map_frame.place(relwidth=0.7, relheight=0.9, relx=0.3, rely=0.1)
@@ -206,7 +196,7 @@ class Map(ttk.Frame):
                 text_entry.get(),
                 option.get_gu(),
                 option.get_dong(),
-                self.scrollable_frame,
+                self.addr_frame,
                 self.map_widget,
                 parent,
             ),
