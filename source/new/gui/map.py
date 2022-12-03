@@ -5,12 +5,15 @@ import tkintermapview
 
 from optionMenu import OptionMenuSet
 from connection import *
+from test import *
 
 spc_list = [
     "파리바게트",
     "파리바게뜨",
+    "파리스바게트",
     "베스킨라빈스",
     "던킨도너츠",
+    "던킨도넛"
     "삼립",
     "파리크라상",
     "패션5",
@@ -42,7 +45,7 @@ def button_click(store, gu, dong, addr_frame, map_widget, parent):
     result = executeCommand(
         mydb,
         mycursor,
-        "SELECT 상가업소번호, 상호명,도로명주소 FROM original_shop_seoul WHERE ((상호명 like '%"
+        "SELECT 상호명,도로명주소 FROM original_shop_seoul WHERE ((상호명 like '%"
         + store
         + "%') and (시군구명 = '"
         + gu
@@ -60,7 +63,7 @@ def button_click(store, gu, dong, addr_frame, map_widget, parent):
 def display(addr_frame, map_widget, result, font, parent):
     idx = 0
     addr_frame.grid_columnconfigure(0, weight=1)  # reset grid
-
+    spc_cards = []
     for res in result:
         style = ttk.Style()
         style.configure("res_card.TLabelframe", background="white", padding=5)
@@ -70,11 +73,12 @@ def display(addr_frame, map_widget, result, font, parent):
         res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
 
         for spc in spc_list:
-            if re.search(spc, res[1]):
+            if re.search(spc, res[0]):
                 res_card = ttk.LabelFrame(addr_frame, style="spc_card.TLabelframe")
                 res_card.grid(row=idx, column=0, sticky="we", padx=(0, 10), pady=(0, 5))
+                spc_cards.append(res_card)
 
-        for i in range(1, len(res)):
+        for i in range(0, len(res)):
 
             res_label = tk.Label(
                 res_card,
@@ -85,8 +89,8 @@ def display(addr_frame, map_widget, result, font, parent):
             res_label.grid(row=i, column=0, sticky="w")
             res_card.bind(
                 "<Button-1>",
-                lambda event, widget=res_card, addr=res[2]: active(
-                    event, widget, addr_frame, addr, map_widget
+                lambda event, widget=res_card, addr=res[1]: active(
+                    event, widget, addr_frame, addr, map_widget, spc_cards
                 ),
             )
 
@@ -99,14 +103,17 @@ def display(addr_frame, map_widget, result, font, parent):
         idx += 1
 
 
-def active(event, widget, addr_frame, addr, map_widget):
+def active(event, widget, addr_frame, addr, map_widget, spc_cards):
     style = ttk.Style()
     style.configure("on_res_card.TLabelframe", background="lightgrey", padding=5)
     style.configure("res_card.TLabelframe", background="white", padding=5)
+    style.configure("spc_card.TLabelframe", background="palevioletred", padding=5)
 
     for frame in addr_frame.winfo_children():
         if frame.winfo_class() == "TLabelframe":
             frame.configure(style="res_card.TLabelframe")
+    for frame in spc_cards:
+        frame.configure(style="spc_card.TLabelframe")
 
     widget.configure(style="on_res_card.TLabelframe")
 
@@ -151,11 +158,16 @@ class Map(ttk.Frame):
         self.search_widget(search_frame, parent)
 
         self.addr_frame = tk.Frame(middle_frame, bg="ghostwhite", padx=10, pady=10)
-        self.addr_frame.place(relwidth=0.3, relheight=0.9, rely=0.1, x=10, anchor="nw")
+        self.addr_frame.place(relwidth=0.29, relheight=0.9, rely=0.1, x=10, anchor="nw")
 
-        # scrollbar = tk.Scrollbar(self.addr_frame)
-        # scrollbar.place(anchor="e", )
-        # scrollbar.config(command=self.addr_frame)
+        my_canvas = tk.Canvas(self.addr_frame)
+        my_canvas.pack(side=tk.LEFT, fill=tk.Y, expand=1)
+        my_scrollbar = ttk.Scrollbar(self.addr_frame, orient=tk.VERTICAL, command=my_canvas.yview)
+        my_scrollbar.pack(side=tk.LEFT, fill=tk.Y)
+        my_canvas.configure(yscrollcommand=my_scrollbar.set)
+        my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
+        self.scrollable_frame = tk.Frame(my_canvas, bg="ghostwhite")
+        my_canvas.create_window((0,0), window=self.scrollable_frame, anchor=tk.NW)
 
         map_frame = tk.Frame(middle_frame, bg="lavender", padx=10)
         map_frame.place(relwidth=0.7, relheight=0.9, relx=0.3, rely=0.1)
@@ -194,7 +206,7 @@ class Map(ttk.Frame):
                 text_entry.get(),
                 option.get_gu(),
                 option.get_dong(),
-                self.addr_frame,
+                self.scrollable_frame,
                 self.map_widget,
                 parent,
             ),
